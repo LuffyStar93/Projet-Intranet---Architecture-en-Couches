@@ -2,9 +2,10 @@
  * Point d'entrée de l'application
  * Initialise le serveur Express et les différentes couches
  */
+import cors from 'cors';
 import dotenv from 'dotenv';
 import express from 'express';
-import cors from 'cors';
+import { connectToDatabase } from './infrastructure/database/index.js';
 
 // Chargement des variables d'environnement
 dotenv.config();
@@ -18,6 +19,11 @@ app.use(cors());
 app.use(express.json());
 
 // TODO: Configurer la base de données
+
+const startServer = async () => {
+  const db = await connectToDatabase();
+};
+
 // TODO: Configurer les routes
 
 // Route de base pour vérifier que l'API est en ligne
@@ -29,5 +35,7 @@ app.get('/api', (req, res) => {
 app.listen(PORT, () => {
   console.log(`Serveur démarré sur le port ${PORT}`);
 });
+
+startServer();
 
 export default app;

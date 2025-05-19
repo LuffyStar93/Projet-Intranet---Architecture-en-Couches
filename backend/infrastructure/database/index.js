@@ -1,20 +1,25 @@
-/**
- * Configuration de la base de données
- * 
- * TODO: Implémentez la connexion à la base de données
- */
-import mongoose from 'mongoose';
+import dotenv from 'dotenv';
+import mysql from 'mysql2/promise';
 
-/**
- * Connecte l'application à la base de données MongoDB
- */
-export const setupDatabase = async () => {
+
+dotenv.config();
+
+let connection;
+
+export const connectToDatabase = async () => {
+  if (connection) return connection; 
+
   try {
-    // TODO: Connectez-vous à MongoDB
-    // await mongoose.connect(process.env.MONGO_URI);
-    console.log('TODO: Se connecter à la base de données MongoDB');
+    connection = await mysql.createConnection({
+      host: process.env.DB_HOST,
+      user: process.env.DB_USER,
+      database: process.env.DB_NAME,
+    });
+
+    console.log('Connexion à MySQL réussie');
+    return connection;
   } catch (error) {
-    console.error('Erreur de connexion à la base de données:', error);
-    process.exit(1); // Quitte l'application en cas d'échec
+    console.error('Erreur de connexion MySQL:', error);
+    process.exit(1);
   }
-}; 
+};
