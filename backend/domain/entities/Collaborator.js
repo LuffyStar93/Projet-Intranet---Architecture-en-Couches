@@ -5,8 +5,9 @@
  * TODO: Implémentez cette classe avec tous les attributs et méthodes nécessaires
  */
 class Collaborator {
-  constructor(id, firstname, lastname, email, password, phone, birthdate, city, country, phone, category, isAdmin) {
+  constructor(id,gender, firstname, lastname, email, password, phone, birthdate, city, country, phone, category, isAdmin) {
     this.id = id;
+    this.gender = gender;
     this.firstname = firstname;
     this.lastname = lastname;
     this.email = email;
