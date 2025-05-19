@@ -1,0 +1,53 @@
+CREATE TABLE IF NOT EXISTS collaborator (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    gender VARCHAR(10),
+    firstname VARCHAR(50),
+    lastname VARCHAR(50),
+    email VARCHAR(100),
+    password VARCHAR(256),
+    phone varchar(20),
+    birthdate DATE,
+    city VARCHAR(100),
+    country VARCHAR(100),
+    photo VARCHAR(256),
+    category VARCHAR(50),
+    isAdmin BOOLEAN DEFAULT FALSE
+);
+
+INSERT INTO collaborator (
+  gender,
+  firstname,
+  lastname,
+  email,
+  password,
+  phone,
+  birthdate,
+  city,
+  country,
+  photo,
+  category,
+  isAdmin
+) VALUES
+  ('male', 'Owen', 'Lopez', 'owen.lopez@example.com', '$2b$10$IExQBXEZVifvfEOWvWsmO.4.OocNb7zQzurQerwOQh1tZx/3okSp.', '02-37-79-78-39', '1992-12-26', 'Villeurbanne', 'France', 'https://randomuser.me/api/portraits/men/40.jpg', 'Marketing', false),
+  ('female', 'Maïwenn', 'Louis', 'maïwenn.louis@example.com', '$2b$10$.lfa1NRJAxvA/8FjGh8ImuUsgSwfkCIkEOaBigMn6qjdrniW9.Fb6', '01-04-22-90-78', '1986-02-10', 'Toulon', 'France', 'https://randomuser.me/api/portraits/women/21.jpg', 'Marketing', false),
+  ('male', 'Mathis', 'Rolland', 'mathis.rolland@example.com', '$2b$10$diOlTKrNfdmm/u6GOjZ.aeBAjFmzeOz7zoUKx.FaBgRut52UTzgSG', '03-15-28-83-79', '1982-11-11', 'Villeurbanne', 'France', 'https://randomuser.me/api/portraits/men/3.jpg', 'Technique', false),
+  ('female', 'Cassandre', 'Roy', 'cassandre.roy@example.com', '$2b$10$FrxK0pOLxSmKxoQ.D1tEyuO3bOcLyqePHzpt0UhNjX0YAzmO5WVgy', '02-64-83-52-15', '1992-04-14', 'Colombes', 'France', 'https://randomuser.me/api/portraits/women/75.jpg', 'Client', false),
+  ('female', 'Gabrielle', 'Legrand', 'gabrielle.legrand@example.com', '$2b$10$ufroWKXB8OHJ3e81lOfyPOz1FJxlji8vfOKjXVzKXfBayooB9ftne', '05-01-56-55-14', '1986-07-29', 'Marseille', 'France', 'https://randomuser.me/api/portraits/women/2.jpg', 'Technique', false),
+  ('female', 'Alyssia', 'Gaillard', 'alyssia.gaillard@example.com', '$2b$10$NxNjTP7Bz5vR.nwZh3vcHuUvihZna.b8L79nEyqJ6cZlIuwAMyI8S', '04-26-97-61-14', '1989-04-17', 'Villeurbanne', 'France', 'https://randomuser.me/api/portraits/women/90.jpg', 'Technique', false),
+  ('female', 'Kiara', 'Rey', 'kiara.rey@example.com', '$2b$10$IIVoIxJfh5oPu7Y33lcRX.RTkCrmoRlFlmN4YtB3m4fl4bf79ZnlO', '01-73-04-03-05', '1987-12-23', 'Rouen', 'France', 'https://randomuser.me/api/portraits/women/18.jpg', 'Marketing', false),
+  ('female', 'Diane', 'Pierre', 'diane.pierre@example.com', '$2b$10$RDhGVL.INWiHzm7VolYhNOe2RTIx.lzsEqt0Y2fJGXAezLjGhEQna', '05-82-65-98-85', '1993-08-13', 'Asnières-sur-seine', 'France', 'https://randomuser.me/api/portraits/women/90.jpg', 'Client', false),
+  ('female', 'Victoire', 'Robin', 'victoire.robin@example.com', '$2b$10$5gUTgMp6QDHKsjGsdsiFcOJsOSqdf1eT3W4.TSfoPtre.jh9fcbLG', '01-68-88-43-69', '1988-01-08', 'Bordeaux', 'France', 'https://randomuser.me/api/portraits/women/23.jpg', 'Marketing', false),
+  ('female', 'Olivia', 'Guillaume', 'olivia.guillaume@example.com', '$2b$10$h6qLIpgGR0lfsZyn9u9E5uS0ru28gYn43dI4S7VvlhrV9X5LUmmDm', '03-31-83-79-31', '1989-11-14', 'Saint-pierre', 'France', 'https://randomuser.me/api/portraits/women/45.jpg', 'Marketing', false),
+  ('female', 'Andréa', 'Noel', 'andréa.noel@example.com', '$2b$10$1GT8RNy3d.T5LrSl/eTUHudw6.Vczf9inqKNCxV0.JwMDj1VnegSO', '05-91-62-09-22', '1986-11-15', 'Vitry-sur-seine', 'France', 'https://randomuser.me/api/portraits/women/75.jpg', 'Marketing', false),
+  ('female', 'Marine', 'Marchand', 'marine.marchand@example.com', '$2b$10$Pdv9WShi/GbmlBFmI5mYP.cvIwzeQHNJBlgWqZozq0TbIChYdF6xm', '04-46-14-99-58', '1992-04-21', 'Reims', 'France', 'https://randomuser.me/api/portraits/women/56.jpg', 'Client', false),
+  ('female', 'Cassandre', 'Da silva', 'cassandre.dasilva@example.com', '$2b$10$nQCy1VKorynpI/zB1Geou.P6wTK7hIBfTEd2yFXt5TlHv6eW7BDmq', '01-28-66-34-97', '1989-01-08', 'Tourcoing', 'France', 'https://randomuser.me/api/portraits/women/47.jpg', 'Marketing', false),
+  ('female', 'Nora', 'Robin', 'nora.robin@example.com', '$2b$10$bvCDsyETLSc1vr6xAKBtg.H2dEsFaOMMU/OcyYQ71dffdMQobjiwG', '05-76-32-34-13', '1992-04-21', 'Avignon', 'France', 'https://randomuser.me/api/portraits/women/64.jpg', 'Client', false),
+  ('male', 'Thibault', 'Bonnet', 'thibault.bonnet@example.com', '$2b$10$cTzNvSqLGX1YCBSHv/HD/.E9qqeKBOduk8iPtcGVcrTWf06unnrVy', '03-99-95-74-27', '1991-11-25', 'Amiens', 'France', 'https://randomuser.me/api/portraits/men/23.jpg', 'Marketing', false),
+  ('male', 'Robin', 'Blanchard', 'robin.blanchard@example.com', '$2b$10$UWrKsHG4T9tRFnCnX5KasuukbFdKPSS7HIFbacxVaZx9Gtj5thYPG', '05-24-92-17-03', '1985-10-01', 'Pau', 'France', 'https://randomuser.me/api/portraits/men/82.jpg', 'Technique', false),
+  ('male', 'Léandro', 'Perrin', 'léandro.perrin@example.com', '$2b$10$CoJ.Y7MkSwp.n4MCT06y1Oa8HVAIdTvK/MDArCaoce1aFYjWcw1ry', '04-58-59-92-31', '1988-09-28', 'Villeurbanne', 'France', 'https://randomuser.me/api/portraits/men/56.jpg', 'Technique', false),
+  ('male', 'Théo', 'Simon', 'théo.simon@example.com', '$2b$10$g4mxBhK4XeQxLpfx3Yidu.M0hGBEmlFeWW/PmN6JOkjj1LR6IYCKm', '02-04-10-19-77', '1984-08-13', 'Champigny-sur-marne', 'France', 'https://randomuser.me/api/portraits/men/13.jpg', 'Technique', false),
+  ('male', 'Nolhan', 'Francois', 'nolhan.francois@example.com', '$2b$10$MeYbpafVGBgYg6x6c9qiru2.7yOGZ03VWlYO4qQSzcOVx5/VOjgta', '05-93-50-00-24', '1989-03-28', 'Rouen', 'France', 'https://randomuser.me/api/portraits/men/4.jpg', 'Client', false),
+  ('female', 'Margaux', 'Schmitt', 'margaux.schmitt@example.com', '$2b$10$b2gBosWFW9gLd1OTYAQ5S.QE.Y9TVnnsHLfjTGpVJad6AAQgHw0yK', '02-77-77-49-54', '1993-02-07', 'Tours', 'France', 'https://randomuser.me/api/portraits/women/23.jpg', 'Technique', false),
+  ('male', 'Johan', 'Da silva', 'johan.dasilva@example.com', '$2b$10$aOugaOYWbbwqXCV/EinHFOfs6NSDL4CptYDZ5ruLEEvi/yWQh4hvG', '04-10-74-17-17', '1988-06-17', 'Perpignan', 'France', 'https://randomuser.me/api/portraits/men/24.jpg', 'Client', false),
+  ('female', 'Amelia', 'Joly', 'amelia.joly@example.com', '$2b$10$adZGDLoopGZMlMFrqJzPi.NfsrTKdowVYThKvWK1C7yZdesBGYAtC', '05-48-14-15-69', '1993-09-13', 'Aulnay-sous-bois', 'France', 'https://randomuser.me/api/portraits/women/35.jpg', 'Marketing', false);
+
