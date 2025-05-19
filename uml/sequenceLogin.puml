@@ -1,0 +1,20 @@
+@startuml
+participant "Client\n(Frontend)" as Client
+participant "AuthController" as Controller
+participant "AuthService" as Service
+participant "CollaboratorRepository" as Repo
+participant "Database" as DB
+
+Client -> Controller: POST /auth/login\n{email, password}
+Controller -> Service: login(email, password)
+Service -> Repo: findByEmail(email)
+Repo -> DB: query()
+DB --> Repo: user
+Repo --> Service: user
+Service -> DB: verify password
+DB --> Service: response password
+Service -> Repo: generate token
+Repo --> Service : created token
+Service --> Controller: {user, token}
+Controller --> Client: 200 OK {user, token}
+@enduml

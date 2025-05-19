@@ -1,0 +1,17 @@
+@startuml
+participant "Admin\n(Frontend)" as Admin
+participant "CollaboratorController" as CController
+participant "CollaboratorService" as Service
+participant "CollaboratorRepository" as Repo
+participant "Database" as DB
+
+Admin -> CController: PATCH /admin/edit\n{id, data}
+CController -> Service: updateCollaborator(req, res)
+Service -> Repo: updateCollaborator(id, data)
+Repo -> DB: update(id, data)
+
+DB --> Repo: response
+Repo --> Service: editedCollaborator
+Service --> CController: {id, data}
+CController --> Admin: 200 OK {id, data}
+@enduml

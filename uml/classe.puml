@@ -1,0 +1,54 @@
+@startuml
+class Collaborator {
+  -id: string
+  -firstname: string
+  -lastname: string
+  -email: string
+  -password: string
+  -phone: string
+  -birthdate: Date
+  -city: string
+  -country: string
+  -photo: string
+  -category: string
+  -isAdmin: boolean
+  +getFullName(): string
+  +isAdministrator(): boolean
+}
+
+interface CollaboratorRepository {
+  +findAll(): Promise<Collaborator[]>
+  +findById(id: string): Promise<Collaborator>
+  +findByEmail(email: string): Promise<Collaborator>
+  +save(collaborator: Collaborator): Promise<Collaborator>
+  +update(id: string, collaborator: Collaborator): Promise<Collaborator>
+  +delete(id: string): Promise<boolean>
+  +findRandom(): Promise<Collaborator>
+  +findByFilters(filters: object): Promise<Collaborator[]>
+}
+
+class SQLCollaboratorRepository {
+  +findAll(): Promise<Collaborator[]>
+  +findById(id: string): Promise<Collaborator>
+  +findByEmail(email: string): Promise<Collaborator>
+  +save(collaborator: Collaborator): Promise<Collaborator>
+  +update(id: string, collaborator: Collaborator): Promise<Collaborator>
+  +delete(id: string): Promise<boolean>
+  +findRandom(): Promise<Collaborator>
+  +findByFilters(filters: object): Promise<Collaborator[]>
+}
+
+class CollaboratorService {
+  -collaboratorRepository: CollaboratorRepository
+  +getAll(): Promise<Collaborator[]>
+  +getById(id: string): Promise<Collaborator>
+  +getRandomCollaborator(): Promise<Collaborator>
+  +createCollaborator(data: object): Promise<Collaborator>
+  +updateCollaborator(id: string, data: object): Promise<Collaborator>
+  +deleteCollaborator(id: string): Promise<boolean>
+  +filterCollaborators(filters: object): Promise<Collaborator[]>
+}
+
+CollaboratorService --> CollaboratorRepository
+SQLCollaboratorRepository ..|> CollaboratorRepository
+@enduml

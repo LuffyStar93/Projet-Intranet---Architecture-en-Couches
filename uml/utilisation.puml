@@ -1,0 +1,36 @@
+```
+@startuml
+left to right direction
+
+actor "Utilisateur Standard" as User
+actor "Administrateur" as Admin
+
+rectangle "Système Intranet" {
+  usecase "Se connecter" as UC1
+  usecase "Voir un collaborateur aléatoire" as UC2
+  usecase "Lister tous les collaborateurs" as UC3
+  usecase "Filtrer les collaborateurs" as UC4
+  usecase "Modifier son profil" as UC5
+  usecase "Se déconnecter" as UC6
+
+  usecase "Ajouter un collaborateur" as UC7
+  usecase "Modifier un collaborateur" as UC8
+  usecase "Supprimer un collaborateur" as UC9
+  usecase "Assigner le rôle d'administrateur" as UC10
+}
+
+Invite --> UC1
+User --> UC2
+User --> UC3
+User --> UC4
+User --> UC5
+User --> UC6
+
+
+Admin --|> User
+Admin --> UC7
+Admin --> UC8
+Admin --> UC9
+Admin --> UC10
+@enduml
+```
