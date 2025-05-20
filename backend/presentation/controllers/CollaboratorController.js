@@ -1,3 +1,5 @@
+import CollaboratorService from "../../application/services/CollaboratorService.js";
+
 /**
  * CollaboratorController - Couche Présentation
  * Gère les requêtes HTTP relatives aux collaborateurs
@@ -7,10 +9,9 @@
 class CollaboratorController {
   /**
    * Constructeur du contrôleur
-   * @param {CollaboratorService} collaboratorService - Service des collaborateurs
    */
-  constructor(collaboratorService) {
-    this.collaboratorService = collaboratorService;
+  constructor() {
+    this.collaboratorService = new CollaboratorService();
   }
 
   /**
@@ -20,11 +21,17 @@ class CollaboratorController {
    */
   async getAllCollaborators(req, res) {
     try {
-      // TODO: Implémentez cette méthode
-      res.status(200).json({ message: 'Méthode à implémenter' });
+      const collaborators = await this.collaboratorService.getAll();
+      res.status(200).json({ 
+        success: true,
+        data: { collaborators } 
+      });
     } catch (error) {
       console.error('Erreur:', error);
-      res.status(500).json({ message: 'Erreur serveur' });
+      res.status(500).json({ 
+        success: false,
+        message: "Erreur lors de la récupération des collaborateurs" 
+      });
     }
   }
 
@@ -36,10 +43,16 @@ class CollaboratorController {
   async getRandomCollaborator(req, res) {
     try {
       // TODO: Implémentez cette méthode
-      res.status(200).json({ message: 'Méthode à implémenter' });
+      res.status(200).json({ 
+        success: true,
+        message: 'Méthode à implémenter' 
+      });
     } catch (error) {
       console.error('Erreur:', error);
-      res.status(500).json({ message: 'Erreur serveur' });
+      res.status(500).json({ 
+        success: false,
+        message: "Erreur lors de la récupération du collaborateur aléatoire" 
+      });
     }
   }
 

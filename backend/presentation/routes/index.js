@@ -1,24 +1,32 @@
-/**
- * Configuration des routes de l'application
- * 
- * TODO: Implémentez la configuration des routes
- */
 import collaboratorRoutesFactory from './collaboratorRoutes.js';
-// TODO: Importez les autres routes (auth, etc.)
+import authRoutesFactory from './authRoutes.js';
+import AuthController from '../../infrastructure/auth/authController.js'
+import { AuthService } from '../../infrastructure/auth/authService.js';
+import { setupAuthMiddleware } from '../middlewares/authMiddleware.js';
+import CollaboratorRepository from "../../infrastructure/repositories/CollaboratorRepository.js"
+import CollaboratorController from '../controllers/CollaboratorController.js';
 
-/**
- * Configure les routes de l'application
- * @param {Express} app - Application Express
- */
 export const setupRoutes = (app) => {
-  // TODO: Configurez les contrôleurs et les routes
-  
-  // Exemple de configuration des routes
-  // const collaboratorController = new CollaboratorController(collaboratorService);
-  // app.use('/api/collaborators', collaboratorRoutesFactory(collaboratorController));
+  // Configuration des services et contrôleurs
+  // Dans un projet réel, utilisez un conteneur d'injection de dépendances
 
-  // Route de base pour vérifier que l'API est en ligne
+  // Services
+  const collaboratorRepository = new CollaboratorRepository(); // À remplacer par l'implémentation réelle
+  const authService = new AuthService(collaboratorRepository);
+
+  // Configuration du middleware d'authentification
+  setupAuthMiddleware(authService);
+
+  // Contrôleurs
+  const authController = new AuthController(authService);
+  const collaboratorController = new CollaboratorController(); // À remplacer par l'implémentation réelle
+
+  // Routes
+  app.use('/api/auth', authRoutesFactory(authController));
+  app.use('/api/collaborators', collaboratorRoutesFactory(collaboratorController));
+
+  // Route de base
   app.get('/api', (req, res) => {
     res.json({ message: 'API Intranet - Bienvenue!' });
   });
-}; 
+};

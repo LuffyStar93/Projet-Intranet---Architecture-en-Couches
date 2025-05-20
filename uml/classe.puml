@@ -17,6 +17,7 @@ class Collaborator {
 }
 
 interface CollaboratorRepository {
+  +login(email: string, password: string): Promise<Collaborator[]>
   +findAll(): Promise<Collaborator[]>
   +findById(id: string): Promise<Collaborator>
   +findByEmail(email: string): Promise<Collaborator>
@@ -28,6 +29,7 @@ interface CollaboratorRepository {
 }
 
 class SQLCollaboratorRepository {
+  +login(email: string, password: string): Promise<Collaborator[]>
   +findAll(): Promise<Collaborator[]>
   +findById(id: string): Promise<Collaborator>
   +findByEmail(email: string): Promise<Collaborator>
@@ -40,6 +42,7 @@ class SQLCollaboratorRepository {
 
 class CollaboratorService {
   -collaboratorRepository: CollaboratorRepository
+  +connect(email: string, password: string): Promise<Collaborator[]>
   +getAll(): Promise<Collaborator[]>
   +getById(id: string): Promise<Collaborator>
   +getRandomCollaborator(): Promise<Collaborator>
