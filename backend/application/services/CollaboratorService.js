@@ -17,9 +17,9 @@ class CollaboratorService {
     return await this.repository.findById(id);
   }
 
-  // async getByFilters(category) {
-  //   return await this.repository.findByFilters(category);
-  // }
+  async getByFilters(category) {
+    return await this.repository.findByFilters(category);
+  }
 
 }
 

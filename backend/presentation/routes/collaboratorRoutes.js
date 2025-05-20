@@ -20,15 +20,6 @@ export default (collaboratorController) => {
     collaboratorController.getAllCollaborators(req, res);
   });
 
-    /**
-   * @route GET /api/collaborators/:id
-   * @desc Récupère tous les collaborateurs
-   * @access Privé
-   */
-    router.get('/:id', isAuthenticated, (req, res) => {
-      collaboratorController.getCollaboratorById(req, res);
-    });
-
   /**
    * @route GET /api/collaborators/random
    * @desc Récupère un collaborateur aléatoire
@@ -45,6 +36,15 @@ export default (collaboratorController) => {
    */
     router.get('/filter', isAuthenticated, (req, res) => {
       collaboratorController.filterCollaborators(req, res);
+  });
+
+  /**
+   * @route GET /api/collaborators/:id
+   * @desc Récupère un collaborateur par son ID
+   * @access Privé
+   */
+  router.get('/:id', isAuthenticated, (req, res) => {
+    collaboratorController.getCollaboratorById(req, res);
   });
 
   // TODO: Implémentez les autres routes

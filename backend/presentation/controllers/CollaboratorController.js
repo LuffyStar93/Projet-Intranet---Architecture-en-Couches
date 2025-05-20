@@ -46,7 +46,7 @@ class CollaboratorController {
       const collaborator = await this.collaboratorService.getRandom();
       res.status(200).json({ 
         success: true,
-        message: collaborator
+        data: { collaborator }
       });
     } catch (error) {
       console.error('Erreur:', error);
@@ -90,7 +90,6 @@ class CollaboratorController {
        async filterCollaborators(req, res) {
         try {
           const { category } = req.body;
-          console.log(category);
           if (!category ) {
             return res.status(400).json({ message: 'Categorie Requise' });
           }

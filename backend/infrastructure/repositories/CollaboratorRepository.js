@@ -61,8 +61,8 @@ class CollaboratorRepository {
   async findRandom() {
     try {
       await this.init();
-      const row = await this.connection.query('SELECT * FROM `collaborator` ORDER BY RAND() LIMIT 1');
-      return row;
+      const [rows] = await this.connection.query('SELECT * FROM `collaborator` ORDER BY RAND() LIMIT 1');
+      return rows[0];
     } catch (error) {
       throw new Error('Erreur lors de la requete : ' + error.message);
     }
