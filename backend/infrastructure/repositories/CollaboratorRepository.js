@@ -1,7 +1,5 @@
-import { connectToDatabase } from "../database/index.js"
-import bcrypt from 'bcrypt';
-import jwt from 'jsonwebtoken';
 import dotenv from 'dotenv';
+import { connectToDatabase } from "../database/index.js";
 
 /**
  * Interface CollaboratorRepository - Couche Domaine
@@ -60,13 +58,32 @@ class CollaboratorRepository {
     }
   }
 
+  async findRandom() {
+    try {
+      await this.init();
+      const row = await this.connection.query('SELECT * FROM `collaborator` ORDER BY RAND() LIMIT 1');
+      return row;
+    } catch (error) {
+      throw new Error('Erreur lors de la requete : ' + error.message);
+    }
+  }
+
+  async findByFilters(category) {
+    try {
+      await this.init();
+      const [rows] = await this.connection.query('SELECT * FROM `collaborator` WHERE category = ?', [category]);
+      return rows;
+    } catch (error) {
+      throw new Error('Erreur lors de la requete : ' + error.message);
+    }
+  }
+
 
 
   // TODO: Ajoutez les autres méthodes nécessaires
   // - save(collaborator)
   // - update(id, collaborator)
   // - delete(id)
-  // - findRandom()
   // - findByFilters(filters)
 }
 

@@ -6,7 +6,6 @@
  */
 import express from 'express';
 import { isAuthenticated } from '../middlewares/authMiddleware.js';
-import { isAdmin } from '../middlewares/authMiddleware.js';
 
 const router = express.Router();
 
@@ -21,6 +20,15 @@ export default (collaboratorController) => {
     collaboratorController.getAllCollaborators(req, res);
   });
 
+    /**
+   * @route GET /api/collaborators/:id
+   * @desc Récupère tous les collaborateurs
+   * @access Privé
+   */
+    router.get('/:id', isAuthenticated, (req, res) => {
+      collaboratorController.getCollaboratorById(req, res);
+    });
+
   /**
    * @route GET /api/collaborators/random
    * @desc Récupère un collaborateur aléatoire
@@ -30,8 +38,16 @@ export default (collaboratorController) => {
     collaboratorController.getRandomCollaborator(req, res);
   });
 
+  /**
+   * @route GET /api/collaborators/filter
+   * @desc Récupère les collaborateurs par catégorie
+   * @access Privé
+   */
+    router.get('/filter', isAuthenticated, (req, res) => {
+      collaboratorController.filterCollaborators(req, res);
+  });
+
   // TODO: Implémentez les autres routes
-  // - GET /api/collaborators/:id (getCollaboratorById)
   // - POST /api/collaborators (createCollaborator)
   // - PUT /api/collaborators/:id (updateCollaborator)
   // - DELETE /api/collaborators/:id (deleteCollaborator)
