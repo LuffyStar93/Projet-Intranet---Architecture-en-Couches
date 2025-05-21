@@ -62,11 +62,5 @@ export default (collaboratorController) => {
 
 
 
-  // TODO: Implémentez les autres routes
-  // - POST /api/collaborators (createCollaborator)
-  // - PUT /api/collaborators/:id (updateCollaborator)
-  // - DELETE /api/collaborators/:id (deleteCollaborator)
-  // - GET /api/collaborators/filter (filterCollaborators)
-
   return router;
 }; 

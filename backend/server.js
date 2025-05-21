@@ -15,7 +15,7 @@ const app = express();
 const PORT = process.env.PORT || 9000;
 
 // Middlewares de base
-app.use(cors());
+app.use(cors()); // url du front à mettre
 app.use(express.json());
 
 // TODO: Configurer la base de données

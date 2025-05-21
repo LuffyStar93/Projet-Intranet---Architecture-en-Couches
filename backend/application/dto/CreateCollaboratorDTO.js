@@ -57,11 +57,10 @@ class CreateCollaboratorDTO {
     return phoneRegex.test(phone);
   }
 
-
   isValidDate(date) {
     const dateRegex = /^\d{4}-\d{2}-\d{2}$/;
     return dateRegex.test(date);
   }
 }
 
-export default CreateCollaboratorDTO; 
+export default CreateCollaboratorDTO;

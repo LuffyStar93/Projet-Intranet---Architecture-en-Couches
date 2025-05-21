@@ -14,7 +14,7 @@ class CollaboratorRepository {
     this.authService = new AuthService(this);
     dotenv.config();
   }
-
+  // à mettre en paramètre potentiellement
   async init() {
     if (!this.connection) {
       this.connection = await connectToDatabase();
@@ -132,7 +132,7 @@ class CollaboratorRepository {
         ? await this.authService.hashPassword(collaborator.password)
         : existingCollaborator.password;
 
-      console.log('Mot de passe final:', password);
+      // console.log('Mot de passe final:', password);
 
       // Construction de la requête avec tous les champs
       const query = `
@@ -189,10 +189,6 @@ class CollaboratorRepository {
     }
   }
 
-
-  // TODO: Ajoutez les autres méthodes nécessaires
-  // - delete(id)
-  // - findByFilters(filters)
 }
 
 export default CollaboratorRepository;
