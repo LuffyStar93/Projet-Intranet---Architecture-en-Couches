@@ -1,8 +1,8 @@
 import CollaboratorRepository from "../../infrastructure/repositories/CollaboratorRepository.js";
 
 class CollaboratorService {
-  constructor() {
-    this.repository = new CollaboratorRepository();
+  constructor(repository = new CollaboratorRepository()) {
+    this.repository = repository;
   }
 
   async getAll() {
@@ -26,42 +26,13 @@ class CollaboratorService {
   }
 
   async create(collaboratorDTO) {
-    return await this.repository.save({
-      gender: collaboratorDTO.gender,
-      firstname: collaboratorDTO.firstname,
-      lastname: collaboratorDTO.lastname,
-      email: collaboratorDTO.email,
-      password: collaboratorDTO.password,
-      phone: collaboratorDTO.phone,
-      birthdate: collaboratorDTO.birthdate,
-      city: collaboratorDTO.city,
-      country: collaboratorDTO.country,
-      photo: collaboratorDTO.photo,
-      category: collaboratorDTO.category,
-      isAdmin: collaboratorDTO.isAdmin
-    });
+    return await this.repository.save({ ...collaboratorDTO });
   }
 
   async update(id, collaboratorDTO) {
     // Préparation des données avec tous les champs
-    const updateData = {
-      gender: collaboratorDTO.gender,
-      firstname: collaboratorDTO.firstname,
-      lastname: collaboratorDTO.lastname,
-      email: collaboratorDTO.email,
-      phone: collaboratorDTO.phone,
-      birthdate: collaboratorDTO.birthdate,
-      city: collaboratorDTO.city,
-      country: collaboratorDTO.country,
-      photo: collaboratorDTO.photo,
-      category: collaboratorDTO.category,
-      isAdmin: collaboratorDTO.isAdmin
-    };
-
-    // Ajout du mot de passe seulement s'il est fourni
-    if (collaboratorDTO.password) {
-      updateData.password = collaboratorDTO.password;
-    }
+    const updateData = { ...collaboratorDTO };
+    if (!collaboratorDTO.password) delete updateData.password;
 
     return await this.repository.update(id, updateData);
   }
