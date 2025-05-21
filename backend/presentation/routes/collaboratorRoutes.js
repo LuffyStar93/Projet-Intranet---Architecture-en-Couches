@@ -5,7 +5,7 @@
  * TODO: Implémentez les routes manquantes
  */
 import express from 'express';
-import { isAuthenticated } from '../middlewares/authMiddleware.js';
+import { isAuthenticated, isAdmin } from '../middlewares/authMiddleware.js';
 
 const router = express.Router();
 
@@ -18,6 +18,10 @@ export default (collaboratorController) => {
    */
   router.get('/', isAuthenticated, (req, res) => {
     collaboratorController.getAllCollaborators(req, res);
+  });
+
+  router.post('/', isAuthenticated, isAdmin, (req, res) => {
+    collaboratorController.createCollaborator(req, res);
   });
 
   /**
@@ -37,6 +41,7 @@ export default (collaboratorController) => {
     router.get('/filter', isAuthenticated, (req, res) => {
       collaboratorController.filterCollaborators(req, res);
   });
+  
 
   /**
    * @route GET /api/collaborators/:id
@@ -46,6 +51,16 @@ export default (collaboratorController) => {
   router.get('/:id', isAuthenticated, (req, res) => {
     collaboratorController.getCollaboratorById(req, res);
   });
+
+  router.put('/:id', isAuthenticated, isAdmin, (req, res) => {
+    collaboratorController.updateCollaborator(req, res);
+  });
+
+  router.delete('/:id', isAuthenticated, isAdmin, (req, res) => {
+    collaboratorController.deleteCollaborator(req, res);
+  });
+
+
 
   // TODO: Implémentez les autres routes
   // - POST /api/collaborators (createCollaborator)

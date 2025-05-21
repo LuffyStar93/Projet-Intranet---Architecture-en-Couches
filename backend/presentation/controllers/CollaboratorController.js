@@ -1,4 +1,7 @@
 import CollaboratorService from "../../application/services/CollaboratorService.js";
+import CreateCollaboratorDTO from "../../application/dto/CreateCollaboratorDTO.js";
+import UpdateCollaboratorDTO from "../../application/dto/UpdateCollaboratorDTO.js";
+import FilterCollaboratorDTO from "../../application/dto/FilterCollaboratorDTO.js";
 
 /**
  * CollaboratorController - Couche Présentation
@@ -42,7 +45,6 @@ class CollaboratorController {
    */
   async getRandomCollaborator(req, res) {
     try {
-      // TODO: Implémentez cette méthode
       const collaborator = await this.collaboratorService.getRandom();
       res.status(200).json({ 
         success: true,
@@ -57,63 +59,164 @@ class CollaboratorController {
     }
   }
 
-    /**
-   * Récupère un collaborateur aléatoire
+  /**
+   * Récupère un collaborateur par ID
    * @param {Request} req - Requête Express
    * @param {Response} res - Réponse Express
    */
-    async getCollaboratorById(req, res) {
-      try {
-        const { id } = req.params;
-        if (!id ) {
-          return res.status(400).json({ message: 'ID Requis' });
-        }
-        const collaborator = await this.collaboratorService.getById(id);
-        res.status(200).json({ 
-          success: true,
-          message: collaborator 
-        });
-      } catch (error) {
-        console.error('Erreur:', error);
-        res.status(500).json({ 
+  async getCollaboratorById(req, res) {
+    try {
+      const { id } = req.params;
+      if (!id) {
+        return res.status(400).json({ 
           success: false,
-          message: "Erreur lors de la récupération du collaborateur" 
+          message: 'ID Requis' 
         });
       }
+      const collaborator = await this.collaboratorService.getById(id);
+      res.status(200).json({ 
+        success: true,
+        data: { collaborator }
+      });
+    } catch (error) {
+      console.error('Erreur:', error);
+      res.status(500).json({ 
+        success: false,
+        message: "Erreur lors de la récupération du collaborateur" 
+      });
     }
+  }
 
-       /**
-   * Récupère un collaborateur aléatoire
+  /**
+   * Crée un nouveau collaborateur
    * @param {Request} req - Requête Express
    * @param {Response} res - Réponse Express
    */
-       async filterCollaborators(req, res) {
-        try {
-          const { category } = req.body;
-          if (!category ) {
-            return res.status(400).json({ message: 'Categorie Requise' });
-          }
+  async createCollaborator(req, res) {
+    try {
+      const createDTO = new CreateCollaboratorDTO(req.body);
+      const validation = createDTO.validate();
 
-          const collaborators = await this.collaboratorService.getByFilters(category);
-          console.log(collaborators);
-          res.status(200).json({ 
-            success: true,
-            message: { collaborators }
-          });
-        } catch (error) {
-          console.error('Erreur:', error);
-          res.status(500).json({ 
-            success: false,
-            message: "Erreur lors de la récupération des collaborateurs" 
-          });
-        }
+      if (!validation.isValid) {
+        return res.status(400).json({
+          success: false,
+          message: validation.errors.join(', ')
+        });
       }
 
-  // TODO: Implémentez les autres méthodes du contrôleur
-  // - createCollaborator(req, res)
-  // - updateCollaborator(req, res)
-  // - deleteCollaborator(req, res)
-  // - filterCollaborators(req, res)
+      const newCollaborator = await this.collaboratorService.create(createDTO);
+      res.status(201).json({
+        success: true,
+        data: { collaborator: newCollaborator }
+      });
+    } catch (error) {
+      console.error('Erreur:', error);
+      res.status(500).json({
+        success: false,
+        message: error.message || "Erreur lors de la création du collaborateur"
+      });
+    }
+  }
+
+  /**
+   * Met à jour un collaborateur
+   * @param {Request} req - Requête Express
+   * @param {Response} res - Réponse Express
+   */
+  async updateCollaborator(req, res) {
+    try {
+      const { id } = req.params;
+      if (!id) {
+        return res.status(400).json({
+          success: false,
+          message: 'ID Requis'
+        });
+      }
+
+      const updateDTO = new UpdateCollaboratorDTO({ id, ...req.body });
+      const validation = updateDTO.validate();
+
+      if (!validation.isValid) {
+        return res.status(400).json({
+          success: false,
+          message: validation.errors.join(', ')
+        });
+      }
+
+      const updatedCollaborator = await this.collaboratorService.update(id, updateDTO);
+      res.status(200).json({
+        success: true,
+        data: { collaborator: updatedCollaborator }
+      });
+    } catch (error) {
+      console.error('Erreur:', error);
+      res.status(500).json({
+        success: false,
+        message: error.message || "Erreur lors de la mise à jour du collaborateur"
+      });
+    }
+  }
+
+  /**
+   * Supprime un collaborateur
+   * @param {Request} req - Requête Express
+   * @param {Response} res - Réponse Express
+   */
+  async deleteCollaborator(req, res) {
+    try {
+      const { id } = req.params;
+      if (!id) {
+        return res.status(400).json({
+          success: false,
+          message: 'ID Requis'
+        });
+      }
+
+      await this.collaboratorService.delete(id);
+      res.status(200).json({
+        success: true,
+        message: "Collaborateur supprimé avec succès"
+      });
+    } catch (error) {
+      console.error('Erreur:', error);
+      res.status(500).json({
+        success: false,
+        message: error.message || "Erreur lors de la suppression du collaborateur"
+      });
+    }
+  }
+
+  /**
+   * Filtre les collaborateurs
+   * @param {Request} req - Requête Express
+   * @param {Response} res - Réponse Express
+   */
+  async filterCollaborators(req, res) {
+    try {
+      const filterDTO = new FilterCollaboratorDTO(req.body);
+      const validation = filterDTO.validate();
+
+      if (!validation.isValid) {
+        return res.status(400).json({
+          success: false,
+          message: validation.errors.join(', ')
+        });
+      }
+
+      const collaborators = await this.collaboratorService.getByFilters(filterDTO.toQueryParams());
+      res.status(200).json({
+        success: true,
+        data: { collaborators }
+      });
+    } catch (error) {
+      console.error('Erreur:', error);
+      res.status(500).json({
+        success: false,
+        message: error.message || "Erreur lors du filtrage des collaborateurs"
+      });
+    }
+  }
+
 }
 
 export default CollaboratorController; 
