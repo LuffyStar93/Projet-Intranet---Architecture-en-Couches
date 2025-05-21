@@ -17,16 +17,17 @@ class CreateCollaboratorDTO {
   validate() {
     const errors = [];
     
-    if (!this.gender) errors.push('Le genre est requis');
-    if (!this.firstname) errors.push('Le prénom est requis');
-    if (!this.lastname) errors.push('Le nom est requis');
-    if (!this.email) errors.push('L\'email est requis');
-    if (!this.password) errors.push('Le mot de passe est requis');
-    if (!this.phone) errors.push('Le téléphone est requis');
-    if (!this.birthdate) errors.push('La date de naissance est requise');
-    if (!this.city) errors.push('La ville est requise');
-    if (!this.country) errors.push('Le pays est requis');
-    if (!this.category) errors.push('La catégorie est requise');
+    if (!this.gender || typeof this.gender !== 'string') errors.push('Le genre est requis');
+    if (!this.firstname || typeof this.firstname !== 'string') errors.push('Le prénom est requis ');
+    if (!this.lastname || typeof this.lastname !== 'string') errors.push('Le nom est requis');
+    if (!this.email || typeof this.email !== 'string') errors.push('L\'email est requis');
+    if (!this.password || typeof this.password !== 'string') errors.push('Le mot de passe est requis');
+    if (!this.phone || typeof this.phone !== 'string') errors.push('Le téléphone est requis');
+    if (!this.birthdate || typeof this.birthdate !== 'string') errors.push('La date de naissance est requise');
+    if (!this.city || typeof this.city !== 'string') errors.push('La ville est requise');
+    if (!this.country || typeof this.country !== 'string') errors.push('Le pays est requis');
+    if (!this.category || typeof this.category !== 'string') errors.push('La catégorie est requise');
+    if (typeof this.isAdmin !== 'boolean') errors.push('Le champ isAdmin est requis');
 
     if (this.email && !this.isValidEmail(this.email)) {
       errors.push('Format d\'email invalide');
@@ -52,9 +53,10 @@ class CreateCollaboratorDTO {
   }
 
   isValidPhone(phone) {
-    const phoneRegex = /^[+]?[(]?[0-9]{3}[)]?[-\s.]?[0-9]{3}[-\s.]?[0-9]{4,6}$/;
+    const phoneRegex = /^(?:(?:\+33|0033|0)[1-9])(?:[\s.-]?\d{2}){4}$/;
     return phoneRegex.test(phone);
   }
+
 
   isValidDate(date) {
     const dateRegex = /^\d{4}-\d{2}-\d{2}$/;
