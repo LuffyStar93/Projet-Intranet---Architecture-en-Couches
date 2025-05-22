@@ -1,5 +1,6 @@
 import express from 'express';
-import { isAuthenticated, isAdmin } from '../middlewares/authMiddleware.js';
+import { isAuthenticated } from '../middlewares/authMiddleware.js';
+
 
 const router = express.Router();
 
@@ -21,6 +22,15 @@ export default (authController) => {
   router.get('/me', isAuthenticated, (req, res) => {
     authController.getCurrentUser(req, res);
   });
+
+    /**
+   * @route POST /api/auth/verify
+   * @desc Verifie le jwt token
+   * @access Privé
+   */
+    router.post('/verify', isAuthenticated, (req, res) => {
+      authController.verifyToken(req, res);
+    });
 
   return router;
 };

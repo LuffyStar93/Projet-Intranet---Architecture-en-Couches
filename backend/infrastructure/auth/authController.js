@@ -1,3 +1,6 @@
+import dotenv from 'dotenv';
+import jwt from 'jsonwebtoken';
+dotenv.config();
 /**
  * Contrôleur d'authentification
  */
@@ -45,6 +48,41 @@ class AuthController {
         res.status(500).json({ message: 'Erreur serveur' });
       }
     }
+
+    /**
+     * Verifie le jwt token
+     */
+    async verifyToken(req, res) {
+      try {
+        const token = req.body.token;
+    
+        if (!token) {
+          return res.status(400).json({ valid: false, error: 'Token manquant' });
+        }
+    
+        const secret = process.env.JWT_SECRET;
+        const decoded = jwt.verify(token, secret);
+    
+        console.log('Token valide');
+        console.log('Données du token :', decoded);
+    
+        return res.status(200).json({
+          valid: true,
+          user: {
+            id: decoded.id,
+            email: decoded.email,
+            isAdmin: decoded.isAdmin,
+          },
+        });
+      } catch (err) {
+        console.error('Token invalide ou expiré :', err.message);
+        return res.status(401).json({
+          valid: false,
+          error: err.name === 'TokenExpiredError' ? 'Token expiré' : 'Token invalide',
+        });
+      }
+    }
+    
   }
   
   export default AuthController;
