@@ -1,9 +1,11 @@
-import '../assets/styles/UpdateCollaborator.scss'
-import FormulaireUpdate from '../components/FormulaireUpdate'
-import { createCollaborator } from '../services/CollaboratorsService'
-import type { CollaboratorData } from '../interfaces/CollaboratorData.interface'
+import '../assets/styles/UpdateCollaborator.scss';
+import FormulaireUpdate from '../components/FormulaireUpdate';
+import { useCheckAdminToken } from '../hooks/useCheckAdminToken';
+import type { CollaboratorData } from '../interfaces/CollaboratorData.interface';
+import { createCollaborator } from '../services/CollaboratorsService';
 
 function CreateCollaborator() {
+  useCheckAdminToken();
 
   const emptyCollaborator: CollaboratorData = {
     gender: '',

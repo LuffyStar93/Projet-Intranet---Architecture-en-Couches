@@ -1,10 +1,12 @@
 import { useEffect, useState } from 'react';
-import '../assets/styles/Collaborators.scss';
-import { showAll, deleteCollaborator } from '../services/CollaboratorsService';
 import { useNavigate } from 'react-router-dom';
+import '../assets/styles/Collaborators.scss';
+import { useCheckToken } from '../hooks/useCheckToken';
 import type { CollaboratorData } from '../interfaces/CollaboratorData.interface';
+import { deleteCollaborator, showAll } from '../services/CollaboratorsService';
 
 function Collaborators() {
+  useCheckToken();
   const navigate = useNavigate();
   const [collaborators, setCollaborators] = useState<CollaboratorData[]>([]);
 

@@ -1,12 +1,13 @@
+import { useEffect, useState } from 'react'
 import '../assets/styles/UpdateCollaborator.scss'
-import { useState, useEffect } from 'react'
-import { useNavigate } from 'react-router-dom'
-import FormulaireUpdate from '../components/FormulaireUpdate'
-import { showMe, updateCollaborator } from '../services/CollaboratorsService'
 import type { CollaboratorWithConfirm } from '../components/FormulaireUpdate'
+import FormulaireUpdate from '../components/FormulaireUpdate'
+import { useCheckToken } from '../hooks/useCheckToken'
+import { showMe, updateCollaborator } from '../services/CollaboratorsService'
 
 function UpdateMyInformation() {
-  const navigate = useNavigate();
+  useCheckToken();
+
   const [collaborator, setCollaborator] = useState<CollaboratorWithConfirm | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);

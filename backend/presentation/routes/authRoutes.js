@@ -28,7 +28,7 @@ export default (authController) => {
    * @desc Verifie le jwt token
    * @access Privé
    */
-    router.post('/verify', isAuthenticated, (req, res) => {
+    router.post('/verify', (req, res) => {
       authController.verifyToken(req, res);
     });
 

@@ -16,8 +16,20 @@ async function loginForm(email: string,password: string){
         }
 }
 
+async function verifyToken(token: string){
+    try {
+        const requestBody = {token}
+        const response = await axios.post('http://localhost:9000/api/auth/verify', requestBody)
+        console.log(response.data);
+        return response.data;
+    } catch (error) {
+        console.log(error);
+    }
+}
+
+
 async function logout(){
         localStorage.removeItem('token');
 }
 
-export { loginForm, logout };
+export { loginForm, logout, verifyToken };

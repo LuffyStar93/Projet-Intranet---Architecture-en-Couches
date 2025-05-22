@@ -1,11 +1,13 @@
+import { useEffect, useState } from 'react'
+import { useLocation, useNavigate } from 'react-router-dom'
 import '../assets/styles/UpdateCollaborator.scss'
-import { useState, useEffect } from 'react'
-import { useNavigate, useLocation } from 'react-router-dom'
-import FormulaireUpdate from '../components/FormulaireUpdate'
-import { getById, updateCollaborator } from '../services/CollaboratorsService'
 import type { CollaboratorWithConfirm } from '../components/FormulaireUpdate'
+import FormulaireUpdate from '../components/FormulaireUpdate'
+import { useCheckAdminToken } from '../hooks/useCheckAdminToken'
+import { getById, updateCollaborator } from '../services/CollaboratorsService'
 
 function UpdateCollaboratorAdmin() {
+  useCheckAdminToken();
   const navigate = useNavigate();
   // useLocation nous permet d'accéder à l'objet location qui contient les informations de navigation
   // location.state contient les données passées via navigate() dans le composant parent
