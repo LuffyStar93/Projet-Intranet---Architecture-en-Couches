@@ -53,7 +53,14 @@ class UpdateCollaboratorDTO {
   }
 
   isValidPhone(phone) {
-    const phoneRegex = /^[+]?[(]?[0-9]{3}[)]?[-\s.]?[0-9]{3}[-\s.]?[0-9]{4,6}$/;
+    // Regex simplifiée pour accepter les formats français courants
+    // Accepte : 
+    // - 02-37-79-78-39
+    // - 02.37.79.78.39
+    // - 02 37 79 78 39
+    // - +33237797839
+    // - 0237797839
+    const phoneRegex = /^(?:\+?\d{1,3}[\s.-]?)?(?:\(?\d{2,4}\)?[\s.-]?)?(?:\d{2}[\s.-]?){4,5}$/;
     return phoneRegex.test(phone);
   }
 

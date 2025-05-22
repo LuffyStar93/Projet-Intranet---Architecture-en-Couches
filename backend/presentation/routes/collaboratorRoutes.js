@@ -52,7 +52,7 @@ export default (collaboratorController) => {
     collaboratorController.getCollaboratorById(req, res);
   });
 
-  router.put('/:id', isAuthenticated, isAdmin, (req, res) => {
+  router.patch('/:id', isAuthenticated, isAdmin, (req, res) => {
     collaboratorController.updateCollaborator(req, res);
   });
 
