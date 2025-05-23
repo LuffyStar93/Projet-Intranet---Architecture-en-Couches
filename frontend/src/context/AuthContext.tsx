@@ -10,11 +10,13 @@ interface User {
 interface AuthContextType {
   user: User | null;
   loading: boolean;
+  setUser: (user: User | null) => void;
 }
 
 const AuthContext = createContext<AuthContextType>({
   user: null,
   loading: true,
+  setUser: () => {},
 });
 
 export const AuthProvider = ({ children }: { children: ReactNode }) => {
@@ -24,7 +26,10 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   useEffect(() => {
     const initAuth = async () => {
       const token = localStorage.getItem('token');
-      if (!token) return setLoading(false);
+      if (!token) {
+        setLoading(false);
+        return;
+      }
 
       const res = await verifyToken(token);
       if (res?.valid && res.user) {
@@ -37,7 +42,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   }, []);
 
   return (
-    <AuthContext.Provider value={{ user, loading }}>
+    <AuthContext.Provider value={{ user, loading, setUser }}>
       {children}
     </AuthContext.Provider>
   );

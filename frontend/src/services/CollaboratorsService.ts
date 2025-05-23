@@ -9,10 +9,9 @@ async function showAll(){
             }
         })
         
-        console.log(response.data.data.collaborators);
         return response.data.data.collaborators;
     } catch (error) {
-        console.log(error);
+        throw error
     }
 }
 
@@ -24,10 +23,9 @@ async function showRandom(){
             }
         })
         
-        console.log(response.data.data.collaborator);
         return response.data.data.collaborator;
     } catch (error) {
-        console.log(error);
+        throw error
     }
 }
 
@@ -39,10 +37,10 @@ async function showMe(){
             }
         })
         
-        console.log(response.data);
+        
         return response.data;
     } catch (error) {
-        console.log(error);
+        throw error
     }
 }
 
@@ -54,10 +52,8 @@ async function getById(id: number) {
             }
         });
         
-        console.log(response.data.data.collaborator);
         return response.data.data.collaborator;
     } catch (error) {
-        console.log(error);
         throw error;
     }
 }
@@ -71,10 +67,8 @@ async function createCollaborator(data: CollaboratorData) {
             }
         });
         
-        console.log(response.data);
         return response.data;
     } catch (error) {
-        console.log(error);
         throw error;
     }
 }
@@ -93,10 +87,30 @@ async function updateCollaborator(id: number, data: CollaboratorData) {
             }
         });
         
-        console.log(response.data);
         return response.data;
     } catch (error) {
-        console.log(error);
+
+        throw error;
+    }
+}
+
+async function updateMe(data: CollaboratorData) {
+    try {
+        // Si le mot de passe est vide, on le retire des données à envoyer
+        const dataToSend = { ...data };
+        if (!dataToSend.password) {
+            delete dataToSend.password;
+        }
+
+        const response = await axios.patch(`http://localhost:9000/api/auth/me`, dataToSend, {
+            headers: {
+                'Authorization': `Bearer ${localStorage.getItem('token')}`
+            }
+        });
+        
+        return response.data;
+    } catch (error) {
+
         throw error;
     }
 }
@@ -109,12 +123,10 @@ async function deleteCollaborator(id: number) {
             }
         });
         
-        console.log(response.data);
         return response.data;
     } catch (error) {
-        console.log(error);
         throw error;
     }
 }
 
-export { showAll, showRandom, showMe, getById, createCollaborator, updateCollaborator, deleteCollaborator };
+export { showAll, showRandom, showMe, getById, createCollaborator, updateMe, updateCollaborator, deleteCollaborator };

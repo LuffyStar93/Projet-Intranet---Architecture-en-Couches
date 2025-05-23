@@ -5,6 +5,7 @@ import { isAuthenticated } from '../middlewares/authMiddleware.js';
 const router = express.Router();
 
 export default (authController) => {
+
   /**
    * @route POST /api/auth/login
    * @desc Authentifie un utilisateur
@@ -21,6 +22,10 @@ export default (authController) => {
    */
   router.get('/me', isAuthenticated, (req, res) => {
     authController.getCurrentUser(req, res);
+  });
+
+  router.patch('/me', isAuthenticated, (req, res) => {
+    authController.editCurrentUser(req, res);
   });
 
     /**

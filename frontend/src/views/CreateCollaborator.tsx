@@ -1,4 +1,3 @@
-import '../assets/styles/UpdateCollaborator.scss';
 import FormulaireUpdate from '../components/FormulaireUpdate';
 import type { CollaboratorData } from '../interfaces/CollaboratorData.interface';
 import { createCollaborator } from '../services/CollaboratorsService';
@@ -66,12 +65,12 @@ function CreateCollaborator() {
 
   return (
     <div className="create-collaborator-container">
-      <h1>Créer un collaborateur</h1>
       <FormulaireUpdate 
         initialData={emptyCollaborator}
         onSubmit={handleSubmit}
         canEditAdmin={true}
         isCreate={true}
+        isProfile={false}
       />
     </div>
   )

@@ -1,5 +1,6 @@
 import { BrowserRouter, Route, Routes } from "react-router";
 import AdminRoute from "./components/AdminRoute";
+import Navbar from "./components/Navbar";
 import ProtectedRoute from "./components/ProtectedRoute";
 import Collaborators from "./views/Collaborators";
 import CreateCollaborator from "./views/CreateCollaborator";
@@ -23,17 +24,18 @@ import UpdateMyInformation from "./views/UpdateMyInformation";
 
 const Router = () => (
   <BrowserRouter>
-    <Routes>
-      <Route path="/login" element={<Login />} />
+    <Navbar />
+      <Routes>
+        <Route path="/login" element={<Login />} />
 
-      <Route
-        path="/"
-        element={
-          <ProtectedRoute>
-            <Home />
-          </ProtectedRoute>
-        }
-      />
+        <Route
+          path="/"
+          element={
+            <ProtectedRoute>
+              <Home />
+            </ProtectedRoute>
+          }
+        />
 
       <Route
         path="/collaborators"
@@ -62,15 +64,15 @@ const Router = () => (
         }
       />
 
-      <Route
-        path="/profile"
-        element={
-          <ProtectedRoute>
-            <UpdateMyInformation />
-          </ProtectedRoute>
-        }
-      />
-    </Routes>
+        <Route
+          path="/profile"
+          element={
+            <ProtectedRoute>
+              <UpdateMyInformation />
+            </ProtectedRoute>
+          }
+        />
+      </Routes>
   </BrowserRouter>
 );
 

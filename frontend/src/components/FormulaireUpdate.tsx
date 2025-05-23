@@ -1,6 +1,6 @@
-import React, { use, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import React, { useState } from "react";
 import type { CollaboratorData } from "../interfaces/CollaboratorData.interface";
+import "../assets/styles/Formulaire.scss";
 
 /**
  * Interface pour le formulaire de mise à jour
@@ -12,13 +12,13 @@ export interface CollaboratorWithConfirm extends CollaboratorData {
 
 interface UpdateCollabFormProps {
   initialData: CollaboratorWithConfirm;
-  onSubmit: (data: CollaboratorWithConfirm) => void;
+  onSubmit: (data: CollaboratorWithConfirm) => Promise<void>;
   canEditAdmin: boolean; // Contrôle l'affichage de la checkbox isAdmin
   isCreate: boolean; // Contrôle si le formulaire est pour la création ou la mise à jour
+  isProfile: boolean; // Indique si le formulaire est utilisé pour le profil de l'utilisateur
 }
 
-const FormulaireUpdate: React.FC<UpdateCollabFormProps> = ({ initialData, onSubmit, canEditAdmin, isCreate }) => {
-  const navigate = useNavigate();
+const FormulaireUpdate: React.FC<UpdateCollabFormProps> = ({ initialData, onSubmit, canEditAdmin, isCreate, isProfile }) => {
   // On crée un nouvel objet sans le mot de passe
   const { password, ...initialDataWithoutPassword } = initialData;
   const [formData, setFormData] = useState<CollaboratorWithConfirm>({
@@ -27,6 +27,9 @@ const FormulaireUpdate: React.FC<UpdateCollabFormProps> = ({ initialData, onSubm
     confirmPassword: ''
   });
   const [errors, setErrors] = useState<{ confirmPassword?: string }>({});
+  const [isSubmitting, setIsSubmitting] = useState(false); // State pour le chargement de la soumission
+  const [submissionMessage, setSubmissionMessage] = useState<string | null>(null); // State pour le message de soumission
+  const [isSuccess, setIsSuccess] = useState<boolean | null>(null); // State pour indiquer si la soumission a réussi
 
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
@@ -35,14 +38,18 @@ const FormulaireUpdate: React.FC<UpdateCollabFormProps> = ({ initialData, onSubm
 
     // Vérifie si c'est un input et que c'est une checkbox
     const val =
-    e.target instanceof HTMLInputElement && e.target.type === "checkbox"
-      ? e.target.checked
+    e.target instanceof HTMLInputElement && e.target.type === "checkbox" ?
+      e.target.checked
       : value;
 
     setFormData((prev) => ({
         ...prev,
         [name]: val,
     }));
+
+    // Reset submission message on change
+    setSubmissionMessage(null);
+    setIsSuccess(null);
 
     // Vérification du mot de passe seulement si les deux champs sont remplis
     if (name === "confirmPassword" || name === "password") {
@@ -61,7 +68,7 @@ const FormulaireUpdate: React.FC<UpdateCollabFormProps> = ({ initialData, onSubm
     }
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     
     // Vérification des mots de passe seulement si on n'est pas en mode création
@@ -72,6 +79,11 @@ const FormulaireUpdate: React.FC<UpdateCollabFormProps> = ({ initialData, onSubm
       }
     }
 
+
+    setSubmissionMessage(null);
+    setIsSuccess(null);
+    setIsSubmitting(true); // Début de la soumission
+
     // Création d'un nouvel objet sans les champs de mot de passe si vides
     const dataToSubmit: CollaboratorWithConfirm = { ...formData };
     if (!dataToSubmit.password) {
@@ -79,73 +91,123 @@ const FormulaireUpdate: React.FC<UpdateCollabFormProps> = ({ initialData, onSubm
       dataToSubmit.confirmPassword = undefined;
     }
 
-    onSubmit(dataToSubmit);
+    try {
+        await onSubmit(dataToSubmit); // Appel de la fonction onSubmit fournie par le parent
+        setSubmissionMessage(isCreate ? 'Collaborateur créé avec succès !' : 'Mise à jour réussie ! ');
+        setIsSuccess(true);
+        // Optionnel : Reset du formulaire après création
+        if(isCreate) {
+            setFormData({
+                gender: '', category: '', firstname: '', lastname: '', email: '', password: '', confirmPassword: '',
+                phone: '', birthdate: '', city: '', country: '', photo: '', isAdmin: false
+            });
+        }
+    } catch (error) {
+        console.error('Erreur lors de la soumission du formulaire:', error);
+        setSubmissionMessage('Une erreur est survenue lors de la soumission.');
+        setIsSuccess(false);
+    } finally {
+        setIsSubmitting(false); // Fin de la soumission
+    }
   };
 
   return (
-    <form onSubmit={handleSubmit} className="space-y-4 max-w-xl mx-auto">
-    <select name="gender" value={formData.gender || ''} onChange={handleChange} className="w-full border p-2 rounded">
-        <option value="">Civilité</option>
-        <option value="male">Monsieur</option>
-        <option value="female">Madame</option>
-        <option value="other">Autre</option>
-      </select>
-
-    <select name="category" value={formData.category  || ''} onChange={handleChange} className="w-full border p-2 rounded">
-        <option value="">Catégorie</option>
-        <option value="Technique">Technique</option>
-        <option value="Client">Client</option>
-        <option value="Marketing">Marketing</option>
-      </select>
-
-      <input name="firstname" value={formData.firstname  || ''} onChange={handleChange} placeholder="Prénom" className="w-full p-2 border" />
-      <input name="lastname" value={formData.lastname  || ''} onChange={handleChange} placeholder="Nom" className="w-full p-2 border" />
-      <input name="email" value={formData.email  || ''} onChange={handleChange} placeholder="Email" type="email" className="w-full p-2 border" />
+    <form onSubmit={handleSubmit} className="form-container form-transition">
+      <h2>{isCreate ? 'Créer un collaborateur' : (isProfile ? 'Mon Profil' : 'Modifier le collaborateur')}</h2>
       
-      <div className="password-section">
+      <div className="form-group">
+        <select name="gender" value={formData.gender || ''} onChange={handleChange} required>
+          <option value="">Civilité</option>
+          <option value="male">Monsieur</option>
+          <option value="female">Madame</option>
+          <option value="other">Autre</option>
+        </select>
+      </div>
+
+      <div className="form-group">
+        <select name="category" value={formData.category || ''} onChange={handleChange} required>
+          <option value="">Catégorie</option>
+          <option value="Technique">Technique</option>
+          <option value="Client">Client</option>
+          <option value="Marketing">Marketing</option>
+        </select>
+      </div>
+
+      <div className="form-group">
+        <input name="firstname" type="text" value={formData.firstname || ''} onChange={handleChange} placeholder="Prénom" required />
+      </div>
+
+      <div className="form-group">
+        <input name="lastname" type="text" value={formData.lastname || ''} onChange={handleChange} placeholder="Nom" required />
+      </div>
+
+      <div className="form-group">
+        <input name="email" value={formData.email || ''} onChange={handleChange} placeholder="Email" type="email" required />
+      </div>
+      
+      <div className="form-group mdp">
         <input 
           name="password" 
           value={formData.password || ''}
           onChange={handleChange}
           placeholder="Nouveau mot de passe" 
-          type="password" 
-          className="w-full p-2 border" 
-        />
-        {!isCreate && 
-        <input
-          name="confirmPassword"
-          value={formData.confirmPassword || ''}
-          onChange={handleChange}
-          placeholder="Confirmer le nouveau mot de passe"
           type="password"
-          className="w-full p-2 border mt-2"
-        />        }
-        {errors.confirmPassword && <p className="text-red-600 text-sm">{errors.confirmPassword}</p>}
+          required={isCreate} // Required que en create
+        />
+        </div>
 
+        {!isCreate && (
+          <div className="form-group">
+            <input
+              name="confirmPassword"
+              value={formData.confirmPassword || ''}
+              onChange={handleChange}
+              placeholder="Confirmer le nouveau mot de passe"
+              type="password"
+            />
+          </div>
+        )}
+        {errors.confirmPassword && <p className="error-message">{errors.confirmPassword}</p>}
+
+      <div className="form-group">
+        <input name="phone" type="tel" value={formData.phone || ''} onChange={handleChange} placeholder="Téléphone" required />
       </div>
 
-      <input name="phone" value={formData.phone  || ''} onChange={handleChange} placeholder="Téléphone" className="w-full p-2 border" />
-      <input name="birthdate" value={formData.birthdate  || ''} onChange={handleChange} type="date" className="w-full p-2 border" />
-      <input name="city" value={formData.city  || ''} onChange={handleChange} placeholder="Ville" className="w-full p-2 border" />
-      <input name="country" value={formData.country  || ''} onChange={handleChange} placeholder="Pays" className="w-full p-2 border" />
-      <input name="photo" value={formData.photo  || ''} onChange={handleChange} placeholder="URL de la photo" className="w-full p-2 border" />
- 
+      <div className="form-group">
+        <input name="birthdate" type="date" value={formData.birthdate || ''} onChange={handleChange} required />
+      </div>
 
-      
+      <div className="form-group">
+        <input name="city" type="text" value={formData.city || ''} onChange={handleChange} placeholder="Ville" required />
+      </div>
+
+      <div className="form-group">
+        <input name="country" type="text" value={formData.country || ''} onChange={handleChange} placeholder="Pays" required />
+      </div>
+
+      <div className="form-group">
+        <input name="photo" type="url" value={formData.photo || ''} onChange={handleChange} placeholder="URL de la photo" />
+      </div>
 
       {canEditAdmin && (
-        <label className="flex items-center space-x-2">
+        <div className="checkbox-group">
           <input type="checkbox" name="isAdmin" checked={formData.isAdmin} onChange={handleChange} />
           <span>Administrateur</span>
-        </label>
+        </div>
       )}
-      {!isCreate ? (
-        <button type="submit" className="bg-blue-600 text-white px-4 py-2 rounded">Modifier</button>
-      ) : (
-        <button type="submit" className="bg-blue-600 text-white px-4 py-2 rounded">Créer</button>
+
+      {/* Submission message */}
+      {submissionMessage && (
+        <p className={isSuccess ? 'success-message' : 'error-message'}>
+          {submissionMessage}
+        </p>
       )}
+
+      <button type="submit" className="button" disabled={isSubmitting}>
+        {isSubmitting ? 'Chargement...' : (isCreate ? 'Créer' : 'Modifier')}
+      </button>
       
-      
+
     </form>
   );
 };

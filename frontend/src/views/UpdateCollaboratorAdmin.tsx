@@ -1,6 +1,5 @@
 import { useEffect, useState } from 'react'
 import { useLocation, useNavigate } from 'react-router-dom'
-import '../assets/styles/UpdateCollaborator.scss'
 import type { CollaboratorWithConfirm } from '../components/FormulaireUpdate'
 import FormulaireUpdate from '../components/FormulaireUpdate'
 import { getById, updateCollaborator } from '../services/CollaboratorsService'
@@ -107,12 +106,12 @@ function UpdateCollaboratorAdmin() {
 
   return (
     <div className="update-collaborator-container">
-      <h1>Modifier le collaborateur</h1>
       <FormulaireUpdate 
         initialData={collaborator}
         onSubmit={handleSubmit}
         canEditAdmin={true}
         isCreate={false}
+        isProfile={false}
       />
     </div>
   )

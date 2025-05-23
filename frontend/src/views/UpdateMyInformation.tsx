@@ -1,14 +1,15 @@
 import { useEffect, useState } from 'react'
-import '../assets/styles/UpdateCollaborator.scss'
 import type { CollaboratorWithConfirm } from '../components/FormulaireUpdate'
 import FormulaireUpdate from '../components/FormulaireUpdate'
-import { showMe, updateCollaborator } from '../services/CollaboratorsService'
+import { showMe, updateMe } from '../services/CollaboratorsService'
+import { useAuth } from '../context/AuthContext'
 
 function UpdateMyInformation() {
 
+  const { user, loading } = useAuth()
 
   const [collaborator, setCollaborator] = useState<CollaboratorWithConfirm | null>(null);
-  const [loading, setLoading] = useState(true);
+  const [infoLoading, setInfoLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
   // Fonction pour formater la date ISO en YYYY-MM-DD
@@ -35,6 +36,7 @@ function UpdateMyInformation() {
 
   useEffect(() => {
     const fetchMyInformation = async () => {
+      setInfoLoading(true);
       try {
         const data = await showMe();
         setCollaborator({
@@ -46,12 +48,22 @@ function UpdateMyInformation() {
         setError('Erreur lors du chargement de vos informations');
         console.error(err);
       } finally {
-        setLoading(false);
+        setInfoLoading(false);
       }
     };
 
-    fetchMyInformation();
-  }, []);
+    // S'assurer que le contexte est chargé ET que l'utilisateur est disponible avant de fetch les infos
+    if (!loading && user && user.id) {
+      fetchMyInformation();
+    } else if (!loading && !user) {
+        setInfoLoading(false);
+        setError('Utilisateur non authentifié.');
+    } else if (!loading && user && !user.id) {
+         setInfoLoading(false);
+         setError('ID utilisateur non disponible.');
+    }
+
+  }, [user, loading]);
 
   const handleSubmit = async (data: CollaboratorWithConfirm) => {
     try {
@@ -64,11 +76,7 @@ function UpdateMyInformation() {
       // Suppression du champ confirmPassword avant l'envoi
       const { confirmPassword, ...dataToSend } = formattedData;
       
-      if (!collaborator?.id) {
-        throw new Error('ID du collaborateur non trouvé');
-      }
-
-      await updateCollaborator(collaborator.id, dataToSend);
+      await updateMe(dataToSend);
       alert('Mise à jour réussie');
     } catch (err) {
       setError('Erreur lors de la mise à jour');
@@ -76,7 +84,7 @@ function UpdateMyInformation() {
     }
   };
 
-  if (loading) {
+  if (infoLoading) {
     return <div>Chargement...</div>;
   }
 
@@ -90,12 +98,12 @@ function UpdateMyInformation() {
 
   return (
     <div className="update-collaborator-container">
-      <h1>Modifier mes informations</h1>
       <FormulaireUpdate 
         initialData={collaborator}
         onSubmit={handleSubmit}
-        canEditAdmin={false} // L'utilisateur ne peut pas modifier son statut admin
+        canEditAdmin={false}
         isCreate={false}
+        isProfile={true}
       />
     </div>
   )

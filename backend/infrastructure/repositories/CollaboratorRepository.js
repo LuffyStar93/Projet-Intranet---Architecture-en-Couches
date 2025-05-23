@@ -43,7 +43,7 @@ class CollaboratorRepository {
   async findById(id) {
     try {
       await this.init();
-      const [rows] = await this.connection.query('SELECT gender, firstname, lastname, email, password, phone, birthdate, city, country, photo, category, isAdmin FROM collaborator WHERE id = ?', [id]);
+      const [rows] = await this.connection.query('SELECT id, gender, firstname, lastname, email, password, phone, birthdate, city, country, photo, category, isAdmin FROM collaborator WHERE id = ?', [id]);
       return rows[0];
     } catch (error) {
       throw new Error('Erreur lors de la récupération du collaborateur: ' + error.message);

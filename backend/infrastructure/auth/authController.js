@@ -1,5 +1,7 @@
 import dotenv from 'dotenv';
 import jwt from 'jsonwebtoken';
+import CollaboratorService from "../../application/services/CollaboratorService.js";
+import UpdateCollaboratorDTO from "../../application/dto/UpdateCollaboratorDTO.js";
 dotenv.config();
 /**
  * Contrôleur d'authentification
@@ -7,6 +9,7 @@ dotenv.config();
 class AuthController {
     constructor(authService) {
       this.authService = authService;
+      this.collaboratorService = new CollaboratorService();
     }
   
     /**
@@ -48,6 +51,34 @@ class AuthController {
         res.status(500).json({ message: 'Erreur serveur' });
       }
     }
+
+    async editCurrentUser(req, res) {
+      try {
+        // L'utilisateur est déjà disponible grâce au middleware
+        const user = req.user;
+        const id = user.id;
+  
+        const updateDTO = new UpdateCollaboratorDTO({ id, ...req.body });
+        const validation = updateDTO.validate();
+
+        if (!validation.isValid) {
+          return res.status(400).json({
+            success: false,
+            message: validation.errors.join(', ')
+          });
+        }
+
+        const updatedCollaborator = await this.collaboratorService.update(id, updateDTO);
+      res.status(200).json({
+        success: true,
+        data: { collaborator: updatedCollaborator }
+      });
+  
+      } catch (error) {
+        res.status(500).json({ message: 'Erreur serveur' });
+      }
+    }
+
 
     /**
      * Verifie le jwt token
