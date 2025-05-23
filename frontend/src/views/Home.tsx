@@ -1,12 +1,10 @@
 import { useEffect, useState } from 'react';
 import '../assets/styles/Home.scss';
-import { useCheckToken } from '../hooks/useCheckToken';
 import type { CollaboratorData } from '../interfaces/CollaboratorData.interface';
 import { showRandom } from '../services/CollaboratorsService';
 
 
 function Home() {
-  useCheckToken();
  
   const [collaborator, setCollaborator] = useState<CollaboratorData | null>(null);
 

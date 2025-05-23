@@ -1,12 +1,12 @@
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import '../assets/styles/Collaborators.scss';
-import { useCheckToken } from '../hooks/useCheckToken';
+import { useAuth } from '../context/AuthContext';
 import type { CollaboratorData } from '../interfaces/CollaboratorData.interface';
 import { deleteCollaborator, showAll } from '../services/CollaboratorsService';
 
 function Collaborators() {
-  useCheckToken();
+  const { user } = useAuth();
   const navigate = useNavigate();
   const [collaborators, setCollaborators] = useState<CollaboratorData[]>([]);
 
@@ -40,9 +40,13 @@ function Collaborators() {
       {collaborators.map((collaborator) => (
         <div key={collaborator.id}>
           <p>{collaborator.firstname}</p>
-
-          <button onClick={() => navigate(`/update-collaborator`, { state: { collaboratorId: collaborator.id } })}>Modifier</button>
-          <button onClick={() => collaborator.id && handleDelete(collaborator.id)}>Supprimer</button>
+        {user?.isAdmin ? (
+          <div>
+              <button onClick={() => navigate(`/update-collaborator`, { state: { collaboratorId: collaborator.id } })}>Modifier</button>
+              <button onClick={() => collaborator.id && handleDelete(collaborator.id)}>Supprimer</button>
+          </div>
+        ): null }
+          
         </div>
       ))}
     </>
@@ -50,3 +54,4 @@ function Collaborators() {
 }
 
 export default Collaborators;
+

@@ -2,11 +2,10 @@ import { useEffect, useState } from 'react'
 import '../assets/styles/UpdateCollaborator.scss'
 import type { CollaboratorWithConfirm } from '../components/FormulaireUpdate'
 import FormulaireUpdate from '../components/FormulaireUpdate'
-import { useCheckToken } from '../hooks/useCheckToken'
 import { showMe, updateCollaborator } from '../services/CollaboratorsService'
 
 function UpdateMyInformation() {
-  useCheckToken();
+
 
   const [collaborator, setCollaborator] = useState<CollaboratorWithConfirm | null>(null);
   const [loading, setLoading] = useState(true);
